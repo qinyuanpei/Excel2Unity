@@ -1,15 +1,15 @@
 # Excel2Unity
 一个为Unity3D编写的插件，可以快速地将Excel文件转换为JSON、CSV和XML，方便在游戏过程中处理各种Excel文件。本项目参考了[excel2json](https://github.com/neil3d/excel2json)，在此表示感谢。
 
-# 如果使用Excel2Unity
-将本项目中的Source文件夹下的Editor文件夹直接复制到Unity3D项目中即可，Unity3D的菜单栏将会增加一个Plugins的菜单项，通过此菜单项的ExcelTools打开插件窗口。在项目资源中选中Excel文件后，点击插件窗口上的"转换"按钮即可！
+# 如何使用Excel2Unity
+将本项目中的Source文件夹直接复制到Unity3D项目中即可，Unity3D的菜单栏将会增加一个Plugins的菜单项，通过此菜单项的ExcelTools打开插件窗口。在项目资源中选中Excel文件后，点击插件窗口上的"转换"按钮即可！
 
-# 使用Excel2Unity的约束条件
+# 使用Excel2Unity的默认约束条件
 * Excel数据表默认以第一行作为字段
 * Excel工作表默认以第一个工作表为主
 * 目前支持utf-8和gb2312两种字符编码类型
 
-# 怎么解决Excel2Unity的Bug？
+# 怎么解决Excel2Unity中的Bug？
 * 提交[issues](https://github.com/qinyuanpei/Excel2Unity/issues)，然后由我来修改
 * 因为编辑器插件的代码已经给出，所以如果你在使过程中遇到任何不爽的地方，可以直接修改源代码。
 
