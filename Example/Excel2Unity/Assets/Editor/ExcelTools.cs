@@ -34,7 +34,7 @@ public class ExcelTools : EditorWindow
 	/// <summary>
 	/// 输出格式
 	/// </summary>
-	private static string[] formatOption=new string[]{"JSON","CSV","XML"};
+	private static string[] formatOption=new string[]{"JSON","CSV","XML","LUA"};
 
 	/// <summary>
 	/// 编码索引
@@ -133,7 +133,8 @@ public class ExcelTools : EditorWindow
 
 			//判断编码类型
 			Encoding encoding=null;
-			if(indexOfEncoding==0){
+			if(indexOfEncoding==0 || indexOfEncoding==3)
+            {
 				encoding=Encoding.GetEncoding("utf-8");
 			}else if(indexOfEncoding==1){
 				encoding=Encoding.GetEncoding("gb2312");
@@ -150,7 +151,11 @@ public class ExcelTools : EditorWindow
 			}else if(indexOfFormat==2){
 				output=excelPath.Replace(".xlsx",".xml");
 				excel.ConvertToXml(output);
-			}
+			}else if (indexOfFormat == 3)
+            {
+                output = excelPath.Replace(".xlsx", ".lua");
+                excel.ConvertToLua(output, encoding);
+            }
 
 			//判断是否保留源文件
 			if(!keepSource)

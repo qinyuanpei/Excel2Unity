@@ -124,10 +124,84 @@ public class ExcelUtility
 		}
 	}
 
-	/// <summary>
-	/// 转换为CSV
+    /// <summary>
+	/// 转换为lua
 	/// </summary>
-	public void ConvertToCSV (string CSVPath, Encoding encoding)
+	/// <param name="luaPath">lua文件路径</param>
+	public void ConvertToLua(string luaPath, Encoding encoding)
+    {
+        //判断Excel文件中是否存在数据表
+        if (mResultSet.Tables.Count < 1)
+            return;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.Append("local datas = {");
+        stringBuilder.Append("\r\n");
+
+        //读取数据表
+        foreach (DataTable mSheet in mResultSet.Tables)
+        {
+            //判断数据表内是否存在数据
+            if (mSheet.Rows.Count < 1)
+                continue;
+
+            //读取数据表行数和列数
+            int rowCount = mSheet.Rows.Count;
+            int colCount = mSheet.Columns.Count;
+
+            //准备一个列表存储整个表的数据
+            List<Dictionary<string, object>> table = new List<Dictionary<string, object>>();
+
+            //读取数据
+            for (int i = 1; i < rowCount; i++)
+            {
+                //准备一个字典存储每一行的数据
+                Dictionary<string, object> row = new Dictionary<string, object>();
+                for (int j = 0; j < colCount; j++)
+                {
+                    //读取第1行数据作为表头字段
+                    string field = mSheet.Rows[0][j].ToString();
+                    //Key-Value对应
+                    row[field] = mSheet.Rows[i][j];
+                }
+                //添加到表数据中
+                table.Add(row);
+            }
+            stringBuilder.Append(string.Format("\t\"{0}\" = ", mSheet.TableName));
+            stringBuilder.Append("{\r\n");
+            foreach (Dictionary<string, object> dic in table)
+            {
+                stringBuilder.Append("\t\t{\r\n");
+                foreach (string key in dic.Keys)
+                {
+                    if (dic[key].GetType().Name == "String")
+                        stringBuilder.Append(string.Format("\t\t\t\"{0}\" = \"{1}\",\r\n", key, dic[key]));
+                    else
+                        stringBuilder.Append(string.Format("\t\t\t\"{0}\" = {1},\r\n", key, dic[key]));
+                }
+                stringBuilder.Append("\t\t},\r\n");
+            }
+            stringBuilder.Append("\t}\r\n");
+        }
+
+        stringBuilder.Append("}\r\n");
+        stringBuilder.Append("return datas");
+
+        //写入文件
+        using (FileStream fileStream = new FileStream(luaPath, FileMode.Create, FileAccess.Write))
+        {
+            using (TextWriter textWriter = new StreamWriter(fileStream, encoding))
+            {
+                textWriter.Write(stringBuilder.ToString());
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// 转换为CSV
+    /// </summary>
+    public void ConvertToCSV (string CSVPath, Encoding encoding)
 	{
 		//判断Excel文件中是否存在数据表
 		if (mResultSet.Tables.Count < 1)
@@ -163,7 +237,6 @@ public class ExcelUtility
 				textWriter.Write (stringBuilder.ToString ());
 			}
 		}
-
 	}
 
 	/// <summary>
